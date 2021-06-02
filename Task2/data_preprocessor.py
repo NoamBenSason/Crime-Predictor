@@ -11,7 +11,7 @@ def load_data():
              "Domestic", "Beat", "District", "Ward", "Community Area",
              "X Coordinate", "Y Coordinate"]]
 
-    features, response = df.drop("Primary Type"), df["Primary Type"]
+    features, response = df.drop("Primary Type",axis=1), df["Primary Type"]
     return
 
 
