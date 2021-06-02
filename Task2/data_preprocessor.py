@@ -6,7 +6,7 @@ def preprocess_features(features):
 
 
 def load_data():
-    df = pd.load_csv("Dataset_crimes_train.csv")
+    df = pd.read_csv("Dataset_crimes_train.csv")
     df = df[["Date", "Block", "Primary Type", "Location Description", "Arrest",
              "Domestic", "Beat", "District", "Ward", "Community Area",
              "X Coordinate", "Y Coordinate"]]
