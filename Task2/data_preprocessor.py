@@ -2,7 +2,13 @@ import pandas as pd
 
 
 def preprocess_features(features):
-    pass
+    features["Date"] = pd.to_datetime(features["Date"])
+    features['day'] = features["Date"].dt.day
+    features['month'] = features["Date"].dt.month
+    features['year'] = features["Date"].dt.year
+    features['time'] = features["Date"].dt.time
+    features['day_of_week'] = features["Date"].dt.dayofweek
+    return
 
 
 def load_data():
@@ -11,14 +17,10 @@ def load_data():
              "Domestic", "Beat", "District", "Ward", "Community Area",
              "X Coordinate", "Y Coordinate"]]
 
-    features, response = df.drop("Primary Type",axis=1), df["Primary Type"]
+    features, response = df.drop("Primary Type", axis=1), df["Primary Type"]
+    processed_features = preprocess_features(features)
     return
 
 
 if __name__ == '__main__':
     load_data()
-
-
-
-
-
