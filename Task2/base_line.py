@@ -33,6 +33,4 @@ class DecisionTree:
 
         y_response = self.dec_tree.predict(x_predict)
 
-        print(np.sum(y_response != y) / len(y))
-
         return y_response
