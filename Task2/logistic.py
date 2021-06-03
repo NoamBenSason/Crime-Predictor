@@ -6,9 +6,9 @@ crimes_dict = {0: 'BATTERY', 1: 'THEFT', 2: 'CRIMINAL DAMAGE',
                3: 'DECEPTIVE PRACTICE', 4: 'ASSAULT'}
 
 
-class KNN:
+class Logistic:
     def __init__(self, num):
-        self.neighbors = LogisticRegression('l1', C=num)
+        self.name = LogisticRegression('l1', C=num)
 
     def fit(self, train_csv_path):
         """
@@ -19,7 +19,7 @@ class KNN:
         """
         self.pre = Preprocessor()
         x_train, y_train = self.pre.load_data_train(train_csv_path)
-        self.neighbors.fit(x_train, y_train)
+        self.name.fit(x_train, y_train)
 
     def predict(self, predict_csv_path):
         """
@@ -30,4 +30,4 @@ class KNN:
         """
         x_predict, y = self.pre.load_data_train(predict_csv_path)
 
-        return self.neighbors.predict(x_predict)
+        return self.name.predict(x_predict)
