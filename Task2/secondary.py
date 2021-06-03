@@ -4,11 +4,12 @@ from sklearn.cluster import SpectralClustering
 from sklearn.preprocessing import StandardScaler, normalize
 from sklearn.decomposition import PCA
 from sklearn.metrics import silhouette_score
+from scipy.spatial import distance_matrix
 import datetime as dt
+import numpy as np
 import data_preprocessor as dpr
 
 TRAIN_PATH = "Dataset_crimes_train_new.csv"
-
 
 fit_per_day_dict = {'Sunday': [], 'Monday': [], 'Tuesday': [], 'Wednesday': [], 'Thursday': [], 'Friday': [],
                     'Saturday': []}
@@ -16,22 +17,31 @@ fit_per_day_dict = {'Sunday': [], 'Monday': [], 'Tuesday': [], 'Wednesday': [], 
 CLUSTERS_NUM = 30
 
 
-def affinity_rbf(X):
-    # Building the clustering model
-    spectral_model_rbf = SpectralClustering(n_clusters=CLUSTERS_NUM, affinity='rbf')
+def calc_affinity_matrix(X):
+    # calculating the affinity matrix
+    A = distance_matrix(X, X)
+    A = np.exp(-A / 50)
+    return A
 
+
+def affinity_rbf(X):
+    # calculating the affinity matrix
+    A = calc_affinity_matrix(X)
+
+    # Building the clustering model
+    spectral_model_rbf = SpectralClustering(n_clusters=CLUSTERS_NUM, affinity='precomputed')
     # Training the model and Storing the predicted cluster labels
-    labels_rbf = spectral_model_rbf.fit_predict(X)
+    labels_rbf = spectral_model_rbf.fit_predict(A)
 
     return labels_rbf
 
 
-def affinity_knn(X_principal):
+def affinity_knn(X):
     # Building the clustering model
     spectral_model_nn = SpectralClustering(n_clusters=CLUSTERS_NUM, affinity='nearest_neighbors')
 
     # Training the model and Storing the predicted cluster labels
-    labels_nn = spectral_model_nn.fit_predict(X_principal)
+    labels_nn = spectral_model_nn.fit_predict(X)
     return labels_nn
 
 
@@ -48,14 +58,6 @@ def affinity_knn(X_principal):
 #
 #     print(s_scores)
 #
-#
-# def compare_affinity():
-#     # Plotting a Bar Graph to compare the models
-#     plt.bar(affinity, s_scores)
-#     plt.xlabel('Affinity')
-#     plt.ylabel('Silhouette Score')
-#     plt.title('Comparison of different Clustering Models')
-#     plt.show()
 
 
 def fit():
@@ -65,16 +67,13 @@ def fit():
     for day in fit_per_day_dict.keys():
 
         X_per_day = X[X['Day Of Week'] == day]
-        X_per_day.drop(['Day Of Week'], inplace=True, axis=1)
-        labels = affinity_knn(X_per_day)
+        X_per_day = X_per_day.drop(['Day Of Week'], axis=1)
+        labels = affinity_rbf(X_per_day)
 
-        centroids = X_per_day
-        label_set = set(labels)  # no duplications
+        centroids = np.zeros((X_per_day.shape[0], X_per_day.shape[1]))
 
-        i = 0
-        for l in label_set:
-            centroids[i] = X_per_day[X_per_day == l].mean()
-            i += 1
+        for i in range(CLUSTERS_NUM):
+            centroids[i] = X_per_day[X_per_day == i].mean()
 
         fit_per_day_dict[day] = centroids
 
@@ -92,3 +91,6 @@ def send_police_cars(dates):
 if __name__ == '__main__':
     # print(send_police_cars('2015-01-01'))
     fit()
+
+    for key in fit_per_day_dict.keys():
+        print("day: " + str(key) + " 30 vals: ", str(fit_per_day_dict[key]))

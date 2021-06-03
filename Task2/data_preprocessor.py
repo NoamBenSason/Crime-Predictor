@@ -105,7 +105,7 @@ class Preprocessor:
     def load_data_second(self, filename):
         df = pd.read_csv(filename)
         features = df[["Date", "X Coordinate", "Y Coordinate"]]
-        features.dropna(inplace=True, axis=0)
+        features = features.dropna(axis=0)
 
         return self.preprocess_features_second(features)
 
