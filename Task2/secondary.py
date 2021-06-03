@@ -65,6 +65,7 @@ def affinity_knn(X):
 #
 
 def return_time_to_normal(time):
+    time = int(str(time)[:3])
     hour = int(time // 60)
     minute = time % 60
     return dt.time(hour=hour, minute=minute, second=00)
@@ -80,18 +81,18 @@ def fit():
         X_per_day = X_per_day.drop(['Day Of Week'], axis=1)
         labels = affinity_rbf(X_per_day)
 
-        centroids = np.zeros((CLUSTERS_NUM))
+        centroids = []
 
         for i in range(CLUSTERS_NUM):
             vec = X_per_day[labels == i].mean()
-            print(vec)
-            print("x="+str(vec[0]))
-            centroids[i] = (vec["X Coordinate"], vec["Y Coordinate"], return_time_to_normal(vec["time"]))  # tuple definition
-
-        fit_per_day_dict[day] = np.round(centroids, decimals=2)
+            centroids.append(tuple(
+                [np.round(vec["X Coordinate"]).astype(int), np.round(vec["Y Coordinate"]).astype(int),
+                 return_time_to_normal(vec["time"])]))  # tuple definition
+        fit_per_day_dict[day] = centroids
 
 
 def send_police_cars(dates):
+
     df = pd.DataFrame({"dates": dates})
     df["dates"] = pd.to_datetime(df["dates"])
     df["dates"] = df["dates"].dt.day_name()
