@@ -61,6 +61,10 @@ class Preprocessor:
         features['is_APARTMENT'] = features['Location Description'].str.contains('APARTMENT').astype(int)
         features['is_STREET'] = features['Location Description'].str.contains('STREET').astype(int)
         features['is_PARKING'] = features['Location Description'].str.contains('PARKING').astype(int)
+        features['is_RESIDENCE'] = features['Location Description'].str.contains('RESIDENCE').astype(int)
+        features['is_SIDEWALK'] = features['Location Description'].str.contains('SIDEWALK').astype(int)
+
+
 
         features.drop(["Date", "Block", "Location Description"], inplace=True,
                       axis=1)
