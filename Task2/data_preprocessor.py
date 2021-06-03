@@ -22,7 +22,11 @@ def preprocess_features(features):
     features['time'] = features["time"].apply(lambda x: x.hour * 60 + x.minute)
     features['day_of_week'] = features["Date"].dt.dayofweek
     features['block_no_street'] = features["Block"].str.slice(0, 6)
-    features.drop(["Block","Date"], axis=1, inplace=True)
+    features = pd.get_dummies(features, prefix='block_',
+                              columns=['block_no_street'])
+    features = pd.get_dummies(features, prefix='location_',
+                              columns=['Location Description'])
+    features.drop(["Block", "Date"], axis=1, inplace=True)
     return features
 
 
