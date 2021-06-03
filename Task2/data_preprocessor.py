@@ -17,6 +17,17 @@ def preprocess_features(features):
     return
 
 
+
+def preprocess_features(features):
+    features["Date"] = pd.to_datetime(features["Date"])
+    features['day'] = features["Date"].dt.day
+    features['month'] = features["Date"].dt.month
+    features['year'] = features["Date"].dt.year
+    features['time'] = features["Date"].dt.time
+    features['day_of_week'] = features["Date"].dt.dayofweek
+    features[features['Arrest']]
+    return
+
 def load_data(filename):
     df = pd.read_csv(filename)
     df = df[["Date", "Block", "Primary Type", "Location Description", "Arrest",
@@ -28,6 +39,9 @@ def load_data(filename):
     processed_features = preprocess_features(features)
 
     return
+
+
+
 
 
 if __name__ == '__main__':

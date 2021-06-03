@@ -27,5 +27,4 @@ class DecisionTree:
         :return: list (or a one dimension numpy array) of labels (ints between {0-4} for the 5 classes)
         """
         x_predict = dpr.load_data(predict_csv_path)
-
         return self.dec_tree.predict(x_predict)
