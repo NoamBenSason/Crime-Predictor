@@ -28,6 +28,6 @@ class RandomForest:
         :param predict_csv_path: path to the data to predict
         :return: list (or a one dimension numpy array) of labels (ints between {0-4} for the 5 classes)
         """
-        x_predict, y = self.prep.load_data_train(predict_csv_path)
+        x_predict, y = self.prep.load_data_test(predict_csv_path)
 
         return self.ran_forest.predict(x_predict)
