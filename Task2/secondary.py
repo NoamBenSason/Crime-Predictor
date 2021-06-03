@@ -88,6 +88,7 @@ def send_police_cars(dates):
     df["dates"] = df["dates"].dt.day_name()
     df["dates"] = df["dates"].apply(lambda x: fit_per_day_dict[x])
 
+
     return df["dates"].values
 
 
