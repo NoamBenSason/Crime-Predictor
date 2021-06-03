@@ -26,6 +26,6 @@ class DecisionTree:
         :param predict_csv_path: path to the data to predict
         :return: list (or a one dimension numpy array) of labels (ints between {0-4} for the 5 classes)
         """
-        x_predict = dpr.load_data(predict_csv_path)
+        x_predict, ignored = dpr.load_data(predict_csv_path) # todo change 'ignored'
 
         return self.dec_tree.predict(x_predict)
