@@ -11,6 +11,7 @@ def train_model(name, model):
     filename.close()
 
 
+
 def get_all_models(names):
     models_dict = {}
     for name in names:
