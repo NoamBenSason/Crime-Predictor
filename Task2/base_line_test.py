@@ -1,7 +1,7 @@
 import base_line
 
-TRAIN_PATH = "Dataset_crimes_train.csv"
-VALIDATION_PATH = "Dataset_crimes_validation.csv"
+TRAIN_PATH = "Dataset_crimes_train_new.csv"
+VALIDATION_PATH = "Dataset_crimes_validation_new.csv"
 
 
 def main():

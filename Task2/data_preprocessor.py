@@ -31,6 +31,16 @@ class Preprocessor:
         features['time'] = features["time"].apply(
             lambda x: x.hour * 60 + x.minute)
         features['day_of_week'] = features["Date"].dt.dayofweek
+        features['Beat'] = features['Beat'].fillna(-1)
+        features['District'] = features['Beat'].fillna(-1)
+        features['Ward'] = features['Beat'].fillna(-1)
+        features['Community Area'] = features['Beat'].fillna(-1)
+        meanX = features[features.applymap(np.isreal)['X Coordinate']][
+            'X Coordinate'].mean()
+        meanY = features[features.applymap(np.isreal)['Y Coordinate']][
+            'Y Coordinate'].mean()
+        features['X Coordinate'] = features['X Coordinate'].fillna(meanX)
+        features['Y Coordinate'] = features['Y Coordinate'].fillna(meanY)
         # features['block_no_street'] = features["Block"].str.slice(0, 5)
         # if self.itemsBlock is None:
         #     self.itemsBlock = features['block_no_street'].value_counts().axes[
@@ -46,26 +56,35 @@ class Preprocessor:
         #     self.itemsLocation))]["Location Description"] = 'other'
         # features = pd.get_dummies(features, prefix='location', columns=[
         #     "Location Description"])
-        features.drop(["Date", "Block", "Location Description"], inplace=True, axis=1)
+        features.drop(["Date", "Block", "Location Description"], inplace=True,
+                      axis=1)
         return features
 
     def preprocess_all(self, features, response):
         return self.preprocess_features(features), self.preprocess_response(
             response)
 
-    def load_data(self, filename):
+    def load_data_train(self, filename):
         df = pd.read_csv(filename)
         df = df[
             ["Date", "Block", "Primary Type", "Location Description", "Arrest",
              "Domestic", "Beat", "District", "Ward", "Community Area",
              "X Coordinate", "Y Coordinate"]]
-        df.dropna(inplace=True, axis=0)
-
         features, response = df.drop("Primary Type", axis=1), df["Primary Type"]
 
         return self.preprocess_all(features, response)
 
+    def load_data_test(self, filename):
+        df = pd.read_csv(filename)
+        df = df[
+            ["Date", "Block", "Primary Type", "Location Description", "Arrest",
+             "Domestic", "Beat", "District", "Ward", "Community Area",
+             "X Coordinate", "Y Coordinate"]]
+        features = df
+
+        return self.preprocess_features(features)
+
 
 if __name__ == '__main__':
     preprocess = Preprocessor()
-    preprocess.load_data("Dataset_crimes_train.csv")
+    preprocess.load_data_train("Dataset_crimes_train.csv")
