@@ -20,7 +20,8 @@ CLUSTERS_NUM = 30
 def calc_affinity_matrix(X):
     # calculating the affinity matrix
     A = distance_matrix(X, X)
-    A = np.exp(-A / 50)
+    A = np.exp(-A / 7751)
+
     return A
 
 
@@ -70,10 +71,10 @@ def fit():
         X_per_day = X_per_day.drop(['Day Of Week'], axis=1)
         labels = affinity_rbf(X_per_day)
 
-        centroids = np.zeros((X_per_day.shape[0], X_per_day.shape[1]))
+        centroids = np.zeros((CLUSTERS_NUM, X_per_day.shape[1]))
 
         for i in range(CLUSTERS_NUM):
-            centroids[i] = X_per_day[X_per_day == i].mean()
+            centroids[i] = X_per_day[labels == i].mean()
 
         fit_per_day_dict[day] = centroids
 
@@ -88,9 +89,12 @@ def send_police_cars(dates):
     return centroids_for_all_date
 
 
+
 if __name__ == '__main__':
-    # print(send_police_cars('2015-01-01'))
     fit()
 
     for key in fit_per_day_dict.keys():
-        print("day: " + str(key) + " 30 vals: ", str(fit_per_day_dict[key]))
+        print("day: " + str(key) + " 30 values: ", str(fit_per_day_dict[key]))
+
+    dates = ['2015-01-01']
+    print(send_police_cars(dates))
