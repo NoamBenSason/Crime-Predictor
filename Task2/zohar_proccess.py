@@ -50,6 +50,26 @@ def preprocess_features(features):
     features[features.applymap(np.isnan)['Y Coordinate']] = meanY
     return
 
+
+def preprocess_features_second(features):
+    features["Date"] = pd.to_datetime(features["Date"])
+    features['day'] = features["Date"].dt.day
+    features['month'] = features["Date"].dt.month
+    features['year'] = features["Date"].dt.year
+    features['time'] = features["Date"].dt.time
+    features.drop(["Date", "Block", "Location Description"], inplace=True, axis=1)
+    return
+
+
+def load_data_second(filename):
+    df = pd.read_csv(filename)
+    features = df[["Date", "X Coordinate", "Y Coordinate"]]
+    df.dropna(inplace=True, axis=0)
+    return preprocess_features_second(features)
+
+
+
+
 def load_data_train(filename):
     df = pd.read_csv(filename)
     df = df[
