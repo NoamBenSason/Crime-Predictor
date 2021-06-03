@@ -88,14 +88,15 @@ def draw_preformance(model_list, mistake_list):
 
 if __name__ == "__main__":
     # TRAIN MODELS
-    names = ["tree_0","tree_1", "tree2"]
+    names = ["tree_10","tree_12", "tree_15"]
     # train_model(names[0], DecisionTree(4, 0))
     # train_model(names[1], DecisionTree(6, 0))
     # train_model(names[2], DecisionTree(8, 0))
     # train_model(names[3], DecisionTree(12, 0))
 
 
-    models = [RandomForest(7, 13 , 12, 200, 0.0, 1), RandomForest(15, 13, 12, 200, 0.0, 1), RandomForest(10, 13, 12, 200, 0.0, 1)]
+    models = [RandomForest(10, 17 , 15, 200, 0.0, 1), RandomForest(12, 17, 15, 200, 0.0, 1), RandomForest(15, 17, 15, 200, 0.0, 1)]
+    #models = [DecisionTree(4,1), DecisionTree(6,1), DecisionTree(8,1)]
     models_dict = get_all_models_no_save(names, models)
     best_model, models_dict, mistake_lst = select_no_save(models_dict, VALIDATION)
     #draw_preformance(names, mistake_lst)
