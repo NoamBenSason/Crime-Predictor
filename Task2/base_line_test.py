@@ -1,6 +1,6 @@
 import base_line
 
-DATA_PATH = r"C:\Users\noamb\Desktop\UNI\YEAR_2\IML_67577\Hackthon\my_data_test.csv"
+DATA_PATH = r"C:\Users\noamb\Desktop\ImlHackton\Task2\Dataset_crimes_train.csv"
 
 
 def main():
