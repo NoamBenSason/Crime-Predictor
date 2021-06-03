@@ -11,7 +11,8 @@ import data_preprocessor as dpr
 
 TRAIN_PATH = "Dataset_crimes_train_new.csv"
 
-fit_per_day_dict = {'Sunday': [], 'Monday': [], 'Tuesday': [], 'Wednesday': [], 'Thursday': [], 'Friday': [],
+fit_per_day_dict = {'Sunday': [], 'Monday': [], 'Tuesday': [], 'Wednesday': [],
+                    'Thursday': [], 'Friday': [],
                     'Saturday': []}
 
 CLUSTERS_NUM = 30
@@ -30,7 +31,8 @@ def affinity_rbf(X):
     A = calc_affinity_matrix(X)
 
     # Building the clustering model
-    spectral_model_rbf = SpectralClustering(n_clusters=CLUSTERS_NUM, affinity='precomputed')
+    spectral_model_rbf = SpectralClustering(n_clusters=CLUSTERS_NUM,
+                                            affinity='precomputed')
     # Training the model and Storing the predicted cluster labels
     labels_rbf = spectral_model_rbf.fit_predict(A)
 
@@ -39,7 +41,8 @@ def affinity_rbf(X):
 
 def affinity_knn(X):
     # Building the clustering model
-    spectral_model_nn = SpectralClustering(n_clusters=CLUSTERS_NUM, affinity='nearest_neighbors')
+    spectral_model_nn = SpectralClustering(n_clusters=CLUSTERS_NUM,
+                                           affinity='nearest_neighbors')
 
     # Training the model and Storing the predicted cluster labels
     labels_nn = spectral_model_nn.fit_predict(X)
@@ -76,25 +79,23 @@ def fit():
         for i in range(CLUSTERS_NUM):
             centroids[i] = X_per_day[labels == i].mean()
 
-        fit_per_day_dict[day] = centroids
+        fit_per_day_dict[day] = np.round(centroids, decimals=2)
 
 
 def send_police_cars(dates):
-    centroids_for_all_date = []
+    df = pd.DataFrame({"dates": dates})
+    df["dates"] = pd.to_datetime(df["dates"])
+    df["dates"] = df["dates"].dt.day_name()
+    df["dates"] = df["dates"].apply(lambda x: fit_per_day_dict[x])
 
-    for date in dates:
-        day = pd.to_datetime(date).dt.day_name()
-        centroids_for_all_date.append(tuple(fit_per_day_dict[day]))
-
-    return centroids_for_all_date
-
+    return df["dates"].values
 
 
 if __name__ == '__main__':
     fit()
 
-    for key in fit_per_day_dict.keys():
-        print("day: " + str(key) + " 30 values: ", str(fit_per_day_dict[key]))
+    # for key in fit_per_day_dict.keys():
+    #     print("day: " + str(key) + " 30 values: ", str(fit_per_day_dict[key]))
 
-    dates = ['2015-01-01']
-    print(send_police_cars(dates))
+    # dates = ["06/03/2021 01:23:00 PM", "05/03/2021 01:23:00 PM"]
+    # print(send_police_cars(dates))
