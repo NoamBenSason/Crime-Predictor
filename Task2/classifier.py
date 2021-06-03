@@ -25,7 +25,3 @@ def send_police_cars(X):
     df["dates"] = df["dates"].apply(lambda x: model[x])
 
     return df["dates"].values
-
-
-if __name__ == '__main__':
-    send_police_cars(["06/03/2021 01:23:00 PM", "05/03/2021 01:23:00 PM"])

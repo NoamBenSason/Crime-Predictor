@@ -1,16 +1,12 @@
 import pandas as pd
-import matplotlib.pyplot as plt
 from sklearn.cluster import SpectralClustering
-from sklearn.preprocessing import StandardScaler, normalize
-from sklearn.decomposition import PCA
-from sklearn.metrics import silhouette_score
 from scipy.spatial import distance_matrix
 import datetime as dt
 import numpy as np
 import data_preprocessor as dpr
 import pickle
 
-TRAIN_PATH = "Dataset_crimes_train_new.csv"
+TRAIN_PATH = "Dataset_crimes_with_new.csv"
 
 fit_per_day_dict = {'Sunday': [], 'Monday': [], 'Tuesday': [], 'Wednesday': [],
                     'Thursday': [], 'Friday': [],
@@ -102,16 +98,16 @@ def send_police_cars(dates):
 
 
 if __name__ == '__main__':
-    # fit()
-    # filename = open("cluster_dict.pkl", 'wb')
-    # pickle.dump(fit_per_day_dict, filename)
-    # filename.close()
+    fit()
+    filename = open("cluster_dict.pkl", 'wb')
+    pickle.dump(fit_per_day_dict, filename)
+    filename.close()
 
-    filename = open("cluster_dict.pkl", 'rb')
-    fit_per_day_dict = pickle.load(filename)
-
-    for key in fit_per_day_dict.keys():
-        print("day: " + str(key) + " 30 values: ", str(fit_per_day_dict[key]))
-
-    dates = ["06/03/2021 01:23:00 PM", "05/03/2021 01:23:00 PM"]
-    print(send_police_cars(dates))
+    # filename = open("cluster_dict.pkl", 'rb')
+    # fit_per_day_dict = pickle.load(filename)
+    #
+    # for key in fit_per_day_dict.keys():
+    #     print("day: " + str(key) + " 30 values: ", str(fit_per_day_dict[key]))
+    #
+    # dates = ["06/03/2021 01:23:00 PM", "05/03/2021 01:23:00 PM"]
+    # print(send_police_cars(dates))
