@@ -10,44 +10,62 @@ crimes_dict_reverse = {'BATTERY': 0, 'THEFT': 1, 'CRIMINAL DAMAGE': 2,
                        'DECEPTIVE PRACTICE': 3, 'ASSAULT': 4}
 
 
-def preprocess_response(response):
-    process_response = response.apply(lambda x:
-                                      crimes_dict_reverse.get(
-                                          x))
-    return process_response
+class Preprocessor:
 
+    def __init__(self):
+        self.itemsBlock = None
+        self.itemsLocation = None
 
-def preprocess_features(features):
-    features["Date"] = pd.to_datetime(features["Date"])
-    features['day'] = features["Date"].dt.day
-    features['month'] = features["Date"].dt.month
-    features['year'] = features["Date"].dt.year
-    features['time'] = features["Date"].dt.time
-    features['time'] = features["time"].apply(lambda x: x.hour * 60 + x.minute)
-    features['day_of_week'] = features["Date"].dt.dayofweek
-    features['block_no_street'] = features["Block"].str.slice(0, 5)
-    print(features.groupby("Location Description")["Location Description"].nunique().sort_values())
+    def preprocess_response(self, response):
+        process_response = response.apply(lambda x:
+                                          crimes_dict_reverse.get(
+                                              x))
+        return process_response
 
-    return features
+    def preprocess_features(self, features):
+        features["Date"] = pd.to_datetime(features["Date"])
+        features['day'] = features["Date"].dt.day
+        features['month'] = features["Date"].dt.month
+        features['year'] = features["Date"].dt.year
+        features['time'] = features["Date"].dt.time
+        features['time'] = features["time"].apply(
+            lambda x: x.hour * 60 + x.minute)
+        features['day_of_week'] = features["Date"].dt.dayofweek
+        features['block_no_street'] = features["Block"].str.slice(0, 5)
+        if not self.itemsBlock:
+            self.itemsBlock = features['block_no_street'].value_counts().axes[
+                                  0].values[:85]
+        features[~features['block_no_street'].isin(self.itemsBlock)] = 'other'
+        features = pd.get_dummies(features, prefix='block', columns=[
+            'block_no_street'])
+        if not self.itemsLocation:
+            self.itemsLocation = \
+            features["Location Description"].value_counts().axes[
+                0].values[:20]
+        features[~features["Location Description"].isin(
+            self.itemsLocation)] = 'other'
+        features = pd.get_dummies(features, prefix='location', columns=[
+            "Location Description"])
 
+        return features
 
-def preprocess_all(features, response):
-    return preprocess_features(features), preprocess_response(
-        response)
+    def preprocess_all(self, features, response):
+        return self.preprocess_features(features), self.preprocess_response(
+            response)
 
+    def load_data(self, filename):
+        df = pd.read_csv(filename)
+        df = df[
+            ["Date", "Block", "Primary Type", "Location Description", "Arrest",
+             "Domestic", "Beat", "District", "Ward", "Community Area",
+             "X Coordinate", "Y Coordinate"]]
+        df.dropna(inplace=True, axis=0)
 
-def load_data(filename):
-    df = pd.read_csv(filename)
-    df = df[
-        ["Date", "Block", "Primary Type", "Location Description", "Arrest",
-         "Domestic", "Beat", "District", "Ward", "Community Area",
-         "X Coordinate", "Y Coordinate"]]
-    df.dropna(inplace=True, axis=0)
+        features, response = df.drop("Primary Type", axis=1), df["Primary Type"]
 
-    features, response = df.drop("Primary Type", axis=1), df["Primary Type"]
-
-    return preprocess_all(features, response)
+        return self.preprocess_all(features, response)
 
 
 if __name__ == '__main__':
-    load_data("Dataset_crimes_train.csv")
+    preprocess = Preprocessor()
+    preprocess.load_data("Dataset_crimes_train.csv")
