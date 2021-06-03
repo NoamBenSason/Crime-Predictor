@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 crimes_dict = {0: 'BATTERY', 1: 'THEFT', 2: 'CRIMINAL DAMAGE', 3: 'DECEPTIVE '
                                                                   'PRACTICE',
@@ -18,8 +19,10 @@ def preprocess_features(features):
     features['month'] = features["Date"].dt.month
     features['year'] = features["Date"].dt.year
     features['time'] = features["Date"].dt.time
+    features['time'] = features["time"].apply(lambda x: x.hour * 60 + x.minute)
     features['day_of_week'] = features["Date"].dt.dayofweek
     features['block_no_street'] = features["Block"].str.slice(0, 6)
+    features.drop("Block", axis=1, inplace=True)
     return features
 
 
