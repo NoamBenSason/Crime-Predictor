@@ -8,8 +8,8 @@ crimes_dict = {0: 'BATTERY', 1: 'THEFT', 2: 'CRIMINAL DAMAGE',
 
 
 class DecisionTree:
-    def __init__(self, depth):
-        self.dec_tree = DecisionTreeClassifier(max_depth=depth)
+    def __init__(self, depth, seed):
+        self.dec_tree = DecisionTreeClassifier(max_depth=depth, random_state=seed)
         self.prep = Preprocessor()
 
     def fit(self, train_csv_path):
