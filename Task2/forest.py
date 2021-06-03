@@ -9,6 +9,7 @@ class RandomForest:
     def __init__(self, depth, features_num, min_smaples, tree_num, reg_param, seed):
         self.ran_forest = RandomForestClassifier(max_depth=depth, max_features=features_num, min_samples_leaf=min_smaples,
                                                  n_estimators=tree_num, ccp_alpha=reg_param, random_state=seed)
+        self.prep = Preprocessor()
 
     def fit(self, train_csv_path):
         """
@@ -17,8 +18,7 @@ class RandomForest:
         :param train_csv_path: path to the train data
         :return: nothing
         """
-        self.pre = Preprocessor()
-        x_train, y_train = self.pre.load_data_train(train_csv_path)
+        x_train, y_train = self.prep.load_data_train(train_csv_path)
         self.ran_forest.fit(x_train, y_train)
 
     def predict(self, predict_csv_path):
@@ -28,6 +28,6 @@ class RandomForest:
         :param predict_csv_path: path to the data to predict
         :return: list (or a one dimension numpy array) of labels (ints between {0-4} for the 5 classes)
         """
-        x_predict = self.pre.load_data_train(predict_csv_path)
+        x_predict = self.prep.load_data_train(predict_csv_path)
 
         return self.ran_forest.predict(x_predict)
