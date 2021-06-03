@@ -53,7 +53,7 @@ class Preprocessor:
         return self.preprocess_features(features), self.preprocess_response(
             response)
 
-    def load_data(self, filename):
+    def load_data(self,filename):
         df = pd.read_csv(filename)
         df = df[
             ["Date", "Block", "Primary Type", "Location Description", "Arrest",
@@ -63,7 +63,10 @@ class Preprocessor:
 
         features, response = df.drop("Primary Type", axis=1), df["Primary Type"]
 
-        return self.preprocess_all(features, response)
+        return self.preprocess_all(features,response)
+
+
+
 
 
 if __name__ == '__main__':
