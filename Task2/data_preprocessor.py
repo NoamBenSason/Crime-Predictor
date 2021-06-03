@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 import numpy as np
+import datetime as dt
 
 crimes_dict = {0: 'BATTERY', 1: 'THEFT', 2: 'CRIMINAL DAMAGE',
                3: 'DECEPTIVE '
@@ -96,18 +97,26 @@ class Preprocessor:
 
     def preprocess_features_second(self, features):
         features["Date"] = pd.to_datetime(features["Date"])
-        features['day'] = features["Date"].dt.day
-        features['month'] = features["Date"].dt.month
-        features['year'] = features["Date"].dt.year
+
+        # features['day'] = features["Date"].dt.day
+        # features['month'] = features["Date"].dt.month
+        # features['year'] = features["Date"].dt.year
         features['time'] = features["Date"].dt.time
-        features.drop(['Date'], inplace=True,
-                      axis=1)
-        return
+        features['time'] = features["time"].apply(
+            lambda x: x.hour * 60 + x.minute)
+
+        # creating day of week feature
+        features['Date'] = pd.to_datetime(features['Date'])
+        features['Day Of Week'] = features['Date'].dt.day_name()
+        features.drop(['Date'], inplace=True, axis=1)
+
+        return features
 
     def load_data_second(self, filename):
         df = pd.read_csv(filename)
         features = df[["Date", "X Coordinate", "Y Coordinate"]]
-        df.dropna(inplace=True, axis=0)
+        features = features.dropna(axis=0)
+
         return self.preprocess_features_second(features)
 
 
