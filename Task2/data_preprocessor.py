@@ -31,22 +31,22 @@ class Preprocessor:
         features['time'] = features["time"].apply(
             lambda x: x.hour * 60 + x.minute)
         features['day_of_week'] = features["Date"].dt.dayofweek
-        features['block_no_street'] = features["Block"].str.slice(0, 5)
-        if self.itemsBlock is None:
-            self.itemsBlock = features['block_no_street'].value_counts().axes[
-                                  0].values[:85]
-        features.loc[~(features['block_no_street'].isin(self.itemsBlock))]['block_no_street'] = 'other'
-        features = pd.get_dummies(features, prefix='block', columns=[
-            'block_no_street'])
-        if self.itemsLocation is None:
-            self.itemsLocation = \
-                features["Location Description"].value_counts().axes[
-                    0].values[:20]
-        features.loc[~(features["Location Description"].isin(
-            self.itemsLocation))]["Location Description"] = 'other'
-        features = pd.get_dummies(features, prefix='location', columns=[
-            "Location Description"])
-        features.drop(["Date", "Block"], inplace=True, axis=1)
+        # features['block_no_street'] = features["Block"].str.slice(0, 5)
+        # if self.itemsBlock is None:
+        #     self.itemsBlock = features['block_no_street'].value_counts().axes[
+        #                           0].values[:85]
+        # features.loc[~(features['block_no_street'].isin(self.itemsBlock))]['block_no_street'] = 'other'
+        # features = pd.get_dummies(features, prefix='block', columns=[
+        #     'block_no_street'])
+        # if self.itemsLocation is None:
+        #     self.itemsLocation = \
+        #         features["Location Description"].value_counts().axes[
+        #             0].values[:20]
+        # features.loc[~(features["Location Description"].isin(
+        #     self.itemsLocation))]["Location Description"] = 'other'
+        # features = pd.get_dummies(features, prefix='location', columns=[
+        #     "Location Description"])
+        features.drop(["Date", "Block", "Location Description"], inplace=True, axis=1)
         return features
 
     def preprocess_all(self, features, response):
