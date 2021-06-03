@@ -90,7 +90,7 @@ class Preprocessor:
         features['month'] = features["Date"].dt.month
         features['year'] = features["Date"].dt.year
         features['time'] = features["Date"].dt.time
-        features.drop(["Date", "Block", "Location Description"], inplace=True,
+        features.drop(['Date'], inplace=True,
                       axis=1)
         return
 
