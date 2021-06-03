@@ -32,9 +32,9 @@ class Preprocessor:
             lambda x: x.hour * 60 + x.minute)
         features['day_of_week'] = features["Date"].dt.dayofweek
         features['Beat'] = features['Beat'].fillna(-1)
-        features['District'] = features['Beat'].fillna(-1)
-        features['Ward'] = features['Beat'].fillna(-1)
-        features['Community Area'] = features['Beat'].fillna(-1)
+        features['District'] = features['District'].fillna(-1)
+        features['Ward'] = features['Ward'].fillna(-1)
+        features['Community Area'] = features['Community Area'].fillna(-1)
         meanX = features[features.applymap(np.isreal)['X Coordinate']][
             'X Coordinate'].mean()
         meanY = features[features.applymap(np.isreal)['Y Coordinate']][
@@ -56,6 +56,12 @@ class Preprocessor:
         #     self.itemsLocation))]["Location Description"] = 'other'
         # features = pd.get_dummies(features, prefix='location', columns=[
         #     "Location Description"])
+        features['Location Description'] = features['Location Description'].fillna('')
+        features['is_STORE'] = features['Location Description'].str.contains('STORE').astype(int)
+        features['is_APARTMENT'] = features['Location Description'].str.contains('APARTMENT').astype(int)
+        features['is_STREET'] = features['Location Description'].str.contains('STREET').astype(int)
+        features['is_PARKING'] = features['Location Description'].str.contains('PARKING').astype(int)
+
         features.drop(["Date", "Block", "Location Description"], inplace=True,
                       axis=1)
         return features
