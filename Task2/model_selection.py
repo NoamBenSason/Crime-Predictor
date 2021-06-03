@@ -46,11 +46,11 @@ def select(models_dict, filepath):
     for name, model in models_dict.items():
         model_response = model.predict(filepath)
         diff = (model_response != response)
-        current_mistakes = np.sum(diff)
-        mistake_list.append(current_mistakes)
-        print(name + " : " + str(current_mistakes))
-        if current_mistakes < mistakes:
-            mistakes = current_mistakes
+        curretn_missclass = np.sum(diff)
+        mistake_list.append(curretn_missclass)
+        print(name + " : " + str(curretn_missclass))
+        if curretn_missclass < mistakes:
+            mistakes = curretn_missclass
             best_model = name
 
     print(best_model)
@@ -68,11 +68,11 @@ def select_no_save(models_dict, filepath):
     for name, model in models_dict.items():
         model_response = model.predict(filepath)
         diff = (model_response != response)
-        current_mistakes = np.sum(diff)
-        mistake_list.append(current_mistakes)
-        print(name + " : " + str(current_mistakes))
-        if current_mistakes < mistakes:
-            mistakes = current_mistakes
+        curretn_missclass = np.sum(diff)/data.shape[0]
+        mistake_list.append(curretn_missclass)
+        print(name + " : " + str(curretn_missclass))
+        if curretn_missclass < mistakes:
+            mistakes = curretn_missclass
             best_model = name
 
     print(best_model)
@@ -82,21 +82,32 @@ def select_no_save(models_dict, filepath):
 def draw_preformance(model_list, mistake_list):
     fig = plt.figure()
     ax = fig.add_subplot()
-    ax.plot(*range(len(model_list)), mistake_list)
+    ax.plot(model_list, mistake_list)
+    ax.xlabel("max features")
+    ax.yabel("misclassification error")
+    ax.title("first feature selection")
     plt.show()
 
 
 if __name__ == "__main__":
     # TRAIN MODELS
-    names = ["tree_0","tree_1", "tree2"]
+    names = []
+    models = []
     # train_model(names[0], DecisionTree(4, 0))
     # train_model(names[1], DecisionTree(6, 0))
     # train_model(names[2], DecisionTree(8, 0))
     # train_model(names[3], DecisionTree(12, 0))
 
+    for i in range(19):
+        if i > 0:
+            models.append(RandomForest(16, i+1, 10, 100, 0.0, 1))
+            names.append(str(i+1))
 
-    models = [RandomForest(7, 13 , 12, 200, 0.0, 1), RandomForest(15, 13, 12, 200, 0.0, 1), RandomForest(10, 13, 12, 200, 0.0, 1)]
+    # models = [RandomForest(None, i, 60, 2, 0.0, 1), RandomForest(1, i, 60, 2, 0.0, 1)]
     models_dict = get_all_models_no_save(names, models)
-    best_model, models_dict, mistake_lst = select_no_save(models_dict, VALIDATION)
-    #draw_preformance(names, mistake_lst)
+    best_model, models_dict, missclass_lst = select_no_save(models_dict, VALIDATION)
+    draw_preformance(names, missclass_lst)
+
+
+
 
