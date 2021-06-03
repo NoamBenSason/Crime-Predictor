@@ -8,6 +8,7 @@ from scipy.spatial import distance_matrix
 import datetime as dt
 import numpy as np
 import data_preprocessor as dpr
+import pickle
 
 TRAIN_PATH = "Dataset_crimes_train_new.csv"
 
@@ -88,15 +89,20 @@ def send_police_cars(dates):
     df["dates"] = df["dates"].dt.day_name()
     df["dates"] = df["dates"].apply(lambda x: fit_per_day_dict[x])
 
-
     return df["dates"].values
 
 
 if __name__ == '__main__':
-    fit()
+    # fit()
+    # filename = open("cluster_dict.pkl", 'wb')
+    # pickle.dump(fit_per_day_dict, filename)
+    # filename.close()
 
-    # for key in fit_per_day_dict.keys():
-    #     print("day: " + str(key) + " 30 values: ", str(fit_per_day_dict[key]))
+    filename = open("cluster_dict.pkl", 'rb')
+    fit_per_day_dict = pickle.load(filename)
 
-    # dates = ["06/03/2021 01:23:00 PM", "05/03/2021 01:23:00 PM"]
-    # print(send_police_cars(dates))
+    for key in fit_per_day_dict.keys():
+        print("day: " + str(key) + " 30 values: ", str(fit_per_day_dict[key]))
+
+    dates = ["06/03/2021 01:23:00 PM", "05/03/2021 01:23:00 PM"]
+    print(send_police_cars(dates))
