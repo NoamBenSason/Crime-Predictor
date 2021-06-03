@@ -4,6 +4,7 @@ import pickle
 import plotly.express as px
 import matplotlib.pyplot as plt
 from base_line import DecisionTree
+from forest import RandomForest
 from data_preprocessor import Preprocessor
 
 TRAIN = "Dataset_crimes_train_new.csv"
@@ -25,6 +26,12 @@ def get_all_models(names):
         filename.close()
     return models_dict
 
+def get_all_models_no_save(names, models):
+    models_dict = {}
+    for i in range(len(names)):
+        models[i].fit(TRAIN)
+        models_dict[names[i]] = models[i]
+    return models_dict
 
 
 def select(models_dict, filepath):
@@ -50,6 +57,28 @@ def select(models_dict, filepath):
     return models_dict[best_model], models_dict, mistake_list
 
 
+def select_no_save(models_dict, filepath):
+    names = list(models_dict.keys())
+    best_model = names[0]
+    prep = Preprocessor()
+    data, response = prep.load_data_train(filepath)
+    mistakes = response.shape[0]
+    print(str(mistakes))
+    mistake_list = []
+    for name, model in models_dict.items():
+        model_response = model.predict(filepath)
+        diff = (model_response != response)
+        current_mistakes = np.sum(diff)
+        mistake_list.append(current_mistakes)
+        print(name + " : " + str(current_mistakes))
+        if current_mistakes < mistakes:
+            mistakes = current_mistakes
+            best_model = name
+
+    print(best_model)
+    return models_dict[best_model], models_dict, mistake_list
+
+
 def draw_preformance(model_list, mistake_list):
     fig = plt.figure()
     ax = fig.add_subplot()
@@ -59,10 +88,15 @@ def draw_preformance(model_list, mistake_list):
 
 if __name__ == "__main__":
     # TRAIN MODELS
-    names = ["tree_4","tree_6", "tree_8", "tree_12","tree_14"]
+    names = ["tree_0","tree_1", "tree2"]
     # train_model(names[0], DecisionTree(4, 0))
-    train_model(names[4], DecisionTree(14, 0))
-    models_dict = get_all_models(names)
-    best_model, models_dict, mistake_lst = select(models_dict, TRAIN)
+    # train_model(names[1], DecisionTree(6, 0))
+    # train_model(names[2], DecisionTree(8, 0))
+    # train_model(names[3], DecisionTree(12, 0))
+
+
+    models = [RandomForest(7, 13 , 12, 200, 0.0, 1), RandomForest(15, 13, 12, 200, 0.0, 1), RandomForest(10, 13, 12, 200, 0.0, 1)]
+    models_dict = get_all_models_no_save(names, models)
+    best_model, models_dict, mistake_lst = select_no_save(models_dict, VALIDATION)
     #draw_preformance(names, mistake_lst)
 
