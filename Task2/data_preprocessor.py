@@ -32,28 +32,28 @@ class Preprocessor:
             lambda x: x.hour * 60 + x.minute)
         features['day_of_week'] = features["Date"].dt.dayofweek
         features['block_no_street'] = features["Block"].str.slice(0, 5)
-        if not self.itemsBlock:
+        if self.itemsBlock is None:
             self.itemsBlock = features['block_no_street'].value_counts().axes[
                                   0].values[:85]
-        features[~features['block_no_street'].isin(self.itemsBlock)] = 'other'
+        features.loc[~(features['block_no_street'].isin(self.itemsBlock))]['block_no_street'] = 'other'
         features = pd.get_dummies(features, prefix='block', columns=[
             'block_no_street'])
-        if not self.itemsLocation:
+        if self.itemsLocation is None:
             self.itemsLocation = \
-            features["Location Description"].value_counts().axes[
-                0].values[:20]
-        features[~features["Location Description"].isin(
-            self.itemsLocation)] = 'other'
+                features["Location Description"].value_counts().axes[
+                    0].values[:20]
+        features.loc[~(features["Location Description"].isin(
+            self.itemsLocation))]["Location Description"] = 'other'
         features = pd.get_dummies(features, prefix='location', columns=[
             "Location Description"])
-
+        features.drop(["Date", "Block"], inplace=True, axis=1)
         return features
 
     def preprocess_all(self, features, response):
         return self.preprocess_features(features), self.preprocess_response(
             response)
 
-    def load_data(self,filename):
+    def load_data(self, filename):
         df = pd.read_csv(filename)
         df = df[
             ["Date", "Block", "Primary Type", "Location Description", "Arrest",
@@ -63,10 +63,7 @@ class Preprocessor:
 
         features, response = df.drop("Primary Type", axis=1), df["Primary Type"]
 
-        return self.preprocess_all(features,response)
-
-
-
+        return self.preprocess_all(features, response)
 
 
 if __name__ == '__main__':

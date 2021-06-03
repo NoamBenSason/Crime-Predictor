@@ -1,5 +1,5 @@
 import pandas as pd
-import data_preprocessor as dpr
+from data_preprocessor import Preprocessor
 from sklearn.tree import DecisionTreeClassifier
 
 crimes_dict = {0: 'BATTERY', 1: 'THEFT', 2: 'CRIMINAL DAMAGE', 3: 'DECEPTIVE PRACTICE', 4: 'ASSAULT'}
@@ -8,6 +8,7 @@ crimes_dict = {0: 'BATTERY', 1: 'THEFT', 2: 'CRIMINAL DAMAGE', 3: 'DECEPTIVE PRA
 class DecisionTree:
     def __init__(self, depth):
         self.dec_tree = DecisionTreeClassifier(max_depth=depth)
+        self.prep = Preprocessor()
 
     def fit(self, train_csv_path):
         """
@@ -16,7 +17,7 @@ class DecisionTree:
         :param train_csv_path: path to the train data
         :return: nothing
         """
-        x_train, y_train = dpr.load_data(train_csv_path)
+        x_train, y_train = self.prep.load_data(train_csv_path)
         self.dec_tree.fit(x_train, y_train)
 
     def predict(self, predict_csv_path):
@@ -26,6 +27,6 @@ class DecisionTree:
         :param predict_csv_path: path to the data to predict
         :return: list (or a one dimension numpy array) of labels (ints between {0-4} for the 5 classes)
         """
-        x_predict = dpr.load_data(predict_csv_path)
+        x_predict,y = self.prep.load_data(predict_csv_path)
 
         return self.dec_tree.predict(x_predict)
