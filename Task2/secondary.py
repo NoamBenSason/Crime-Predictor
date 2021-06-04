@@ -90,9 +90,13 @@ def fit():
                  return_time_to_normal(vec["time"])]))  # tuple definition
         fit_per_day_dict[day] = centroids
 
+        # df_labels = pd.DataFrame(labels, columns=["cluster"])
+        # X_per_day.reset_index(drop=True, inplace = True)
+        # df_concat = pd.concat([X_per_day, df_labels], axis=1, join="inner")
+
+
 
 def send_police_cars(dates):
-
     df = pd.DataFrame({"dates": dates})
     df["dates"] = pd.to_datetime(df["dates"])
     df["dates"] = df["dates"].dt.day_name()
