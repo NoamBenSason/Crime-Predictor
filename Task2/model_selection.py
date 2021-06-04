@@ -104,8 +104,8 @@ if __name__ == "__main__":
     names = ["chosen_model"]
     train_model(names[0], RandomForest(16, 9, 10, 75, 0.0, 1))
     # models = [RandomForest(None, i, 60, 2, 0.0, 1), RandomForest(1, i, 60, 2, 0.0, 1)]
-    models_dict = get_all_models(names)
-    best_model, models_dict, missclass_lst = select(models_dict, TEST)
+    # models_dict = get_all_models(names)
+    # best_model, models_dict, missclass_lst = select(models_dict, TEST)
     #draw_preformance(names, missclass_lst)
 
 

@@ -1,7 +1,5 @@
 import pandas as pd
-from sklearn.preprocessing import OneHotEncoder
 import numpy as np
-import datetime as dt
 
 crimes_dict = {0: 'BATTERY', 1: 'THEFT', 2: 'CRIMINAL DAMAGE',
                3: 'DECEPTIVE '

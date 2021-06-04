@@ -25,3 +25,7 @@ def send_police_cars(X):
     df["dates"] = df["dates"].apply(lambda x: model[x])
 
     return df["dates"].values
+
+
+if __name__ == '__main__':
+    print(predict("Dataset_crimes_with_new.csv"))
