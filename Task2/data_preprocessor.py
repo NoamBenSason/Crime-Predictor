@@ -1,7 +1,5 @@
 import pandas as pd
-from sklearn.preprocessing import OneHotEncoder
 import numpy as np
-import datetime as dt
 
 crimes_dict = {0: 'BATTERY', 1: 'THEFT', 2: 'CRIMINAL DAMAGE',
                3: 'DECEPTIVE '
@@ -24,6 +22,7 @@ class Preprocessor:
         return process_response
 
     def preprocess_features(self, features):
+        features["Date"] = features["Date"].fillna(pd.to_datetime("today"))
         features["Date"] = pd.to_datetime(features["Date"])
         features['day'] = features["Date"].dt.day
         features['month'] = features["Date"].dt.month
@@ -88,7 +87,7 @@ class Preprocessor:
     def load_data_test(self, filename):
         df = pd.read_csv(filename)
         df = df[
-            ["Date", "Block", "Primary Type", "Location Description", "Arrest",
+            ["Date", "Block", "Location Description", "Arrest",
              "Domestic", "Beat", "District", "Ward", "Community Area",
              "X Coordinate", "Y Coordinate"]]
         features = df

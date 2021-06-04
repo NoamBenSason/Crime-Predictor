@@ -1,4 +1,3 @@
-import pandas as pd
 from data_preprocessor import Preprocessor
 from sklearn.ensemble import RandomForestClassifier
 
@@ -7,8 +6,9 @@ crimes_dict = {0: 'BATTERY', 1: 'THEFT', 2: 'CRIMINAL DAMAGE', 3: 'DECEPTIVE PRA
 
 class RandomForest:
     def __init__(self, depth, features_num, min_smaples, tree_num, reg_param, seed):
-        self.ran_forest = RandomForestClassifier(max_depth=depth, max_features=features_num, min_samples_leaf=min_smaples,
-                                                 n_estimators=tree_num, ccp_alpha=reg_param, random_state=seed)
+        self.ran_forest = RandomForestClassifier(max_depth=depth,
+                                                 max_features=features_num,
+                                                 min_samples_leaf=min_smaples,n_estimators=tree_num)
         self.prep = Preprocessor()
 
     def fit(self, train_csv_path):
@@ -28,6 +28,6 @@ class RandomForest:
         :param predict_csv_path: path to the data to predict
         :return: list (or a one dimension numpy array) of labels (ints between {0-4} for the 5 classes)
         """
-        x_predict, y = self.prep.load_data_train(predict_csv_path)
+        x_predict = self.prep.load_data_test(predict_csv_path)
 
         return self.ran_forest.predict(x_predict)
