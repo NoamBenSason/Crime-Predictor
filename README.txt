@@ -12,3 +12,5 @@ secondary.py - fit a spectral clustering over the data for the crime location pr
 chosen_model.pkl - fitted model for the crime classification task (the first task)
 cluster_dict.pkl - fitted model for the crime location prediction task (the second task)
 classifier.py - main file
+
+Creators: Noam Ben Sasom, Avishai Elmakies, Zohar Samra, Michael Koblerchick
