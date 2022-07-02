@@ -1,5 +1,6 @@
 # Crime classifier by location and Crime loaction predictor
-![image](https://user-images.githubusercontent.com/75226397/177016618-b989fbba-b940-4fcc-aa01-56d491c4499a.png)
+
+![image](https://user-images.githubusercontent.com/75226397/177016669-136b3e15-b048-46b1-9204-5f9544c4fc77.png)
 
 For elaborated explanation in Hebrew about the project - see 'project.pdf'.
 
