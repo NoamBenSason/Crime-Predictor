@@ -1,4 +1,4 @@
-# Crime classifier by location and Crime loaction predictor
+# Crime classifier and Crime loaction predictor
 
 For elaborated explanation in Hebrew about the project - see 'project.pdf'.
 
