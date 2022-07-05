@@ -3,6 +3,7 @@
 For elaborated explanation in Hebrew about the project - see 'project.pdf'.
 
 Files description:
+
 adaboost.py - adaboost classifier
 base_line.py - basic tree classifier
 data_preprocessor - contains processing functions
