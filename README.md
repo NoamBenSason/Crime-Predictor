@@ -16,4 +16,4 @@ chosen_model.pkl - fitted model for the crime classification task (the first tas
 cluster_dict.pkl - fitted model for the crime location prediction task (the second task)
 classifier.py - main file
 
-Creators: Avishai Elmakies, Zohar Samra, Michael Koblerchick, Noam Ben Sason.
+Collaborators: Avishai Elmakies, Zohar Samra, Michael Koblerchick, Noam Ben Sason.
